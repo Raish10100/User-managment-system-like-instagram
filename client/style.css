@@ -1,0 +1,85 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+body {
+  background-color: #052e5f;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-wrap: wrap;
+}
+.container {
+  background-color: #2a6cae;
+  width: 400px;
+  padding: 40px 30px;
+  font-size: 20px;  
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+  border-radius: 10px;
+}
+
+h1 {
+  font-size: 25px;
+  font-weight: bold;
+  white-space: wrap;
+}
+
+form {
+  margin-top: 35px;
+}
+
+input {
+  font-size: 17px;
+  padding: 5px;
+  outline: none;
+  border: none;
+  width: 100%;
+  border-radius: 5px;
+  margin-top: 2px;
+}
+
+button {
+  margin-top: 5px;
+  width: 100%;
+  padding: 5px;
+  border: none;
+  font-size: 25px;
+  font-weight: bold;
+  border-radius: 5px;
+  background-color: #2693ff;
+}
+.form-group {
+  margin-bottom: 20px;
+}
+.profile-image {
+  margin-bottom: 20px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;      object-fit: cover;
+
+}
+.profile-image-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.profile-details * {
+  text-align: center;
+  margin-bottom: 25px;
+}
+.links {
+  font-size: 20px;
+  margin-top: 40px;
+}
+.links a {
+  margin-left: 15px;
+}
+.link-login {
+  margin-top: 40px;
+}
