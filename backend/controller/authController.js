@@ -98,21 +98,42 @@ const signIn = async (req, res, next) => {
 };
 
 const getUserDetails = async (req, res, next) => {
-    const { username,email } = req.user;
-    // console.log(req.user)
-try {
-    
-        const userInfo_getUserDetails = await userModel.findOne({username});
-    
-        return res.status(400).json({
+     
+    try {
+  // console.log(`username is ${req.user.username}`)
+    const  get_username = req.user.username
+  const userInfo_getUserDetails = await userModel.findOne({username : get_username}) ;
+  // console.log(get_username)
+        return res.status(200).json({
             success: true,
             data: userInfo_getUserDetails
-        })
+        }) 
 } catch (error) {
-    return res.status(501).send({msg: error.message})
+    return res.status(501).send({msg:`getUserDetails controller function error : ${error.message}` })
 }
 
 };
 
 
-export { signUp, signIn, getUserDetails };
+const logOut = async(req,res,next) => {
+       try {
+        const cookieOption = {
+          expires: new Date(0),//! current expires date 
+          httpOnly: true     //! not modified from client-side
+        }
+
+        // console.log(`token: ${req.cookies}`)
+         res.cookie('token',null,cookieOption);
+         res.status(200).json({
+          success: true,
+          message: `Successfully logout !`
+        })
+
+       } catch (error) {
+        return res.status(400).send({msg: error.message})
+       }
+
+
+}
+ 
+export { signUp, signIn, getUserDetails,logOut };

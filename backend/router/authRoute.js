@@ -1,5 +1,5 @@
 import express from "express"
-import { getUserDetails, signIn, signUp } from "../controller/authController.js";
+import { getUserDetails, logOut, signIn, signUp } from "../controller/authController.js";
 import jwtAuth from "../middleware/auth.middleware.js";
 
 const authRoute = express.Router()
@@ -8,7 +8,7 @@ authRoute.route('/signup').post(signUp)       //! Here don't forget to give "/" 
 authRoute.route('/signin').post(signIn)
 
 authRoute.route('/user').get(jwtAuth,getUserDetails)
+authRoute.route('/logout').get(jwtAuth,logOut)
 
 
-
-export default authRoute;
+export default authRoute; 
