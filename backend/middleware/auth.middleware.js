@@ -7,7 +7,8 @@ const jwtAuth = async (req,res,next) => {
 
 
 const token = (req.cookies && req.cookies.token) || null;//! cookies
-// console.log(`token : ${token}`)
+// console.log(`token : ${req.cookies.token}`)
+
 if(!token){
     return res.status(400).json({
         success: false,
@@ -17,7 +18,7 @@ if(!token){
  
 try {
     const playload =   JWT.verify(token,process.env.SECRET);
-    console.log(playload);
+    // console.log(playload);
     req.user = {id: playload._id,username: playload.username}
     return next()                                                                  //! Don't forget to do next()   otherwise the process will not move forward
 } catch (error) {

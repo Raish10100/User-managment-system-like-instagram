@@ -1,10 +1,12 @@
 import emailValidator from "email-validator";
 import userModel from "../model/userSchema.js";
 import bcrypt from 'bcrypt'
+import JWT from 'jsonwebtoken'
+import sendEmail from "../utils/emailSender.js";
 
 const signUp = async (req, res, next) => {
   const { name, email, password, bio, username } = req.body;
-//   console.log(name);
+  // console.log(name,email,password,username,bio);
   if (!name || !password || !email || !bio || !username) {
     return res.status(400).json({
       success: false,
@@ -31,6 +33,13 @@ const signUp = async (req, res, next) => {
       data: result,
     });
   } catch (error) {
+
+    if(error.code === 11000){
+      return res.status(400).json({
+        success: false,
+        message: `This account is already exists`
+      });
+    }
     return res.status(400).json({
       success: false,
       message: `signup controller error : ${error}`,
@@ -122,12 +131,16 @@ const logOut = async(req,res,next) => {
           httpOnly: true     //! not modified from client-side
         }
 
-        // console.log(`token: ${req.cookies}`)
          res.cookie('token',null,cookieOption);
+
+        //  req.cookies('token',null,cookieOption);
+         console.log('cookie: ',req.cookie)
+        //  console.log('cookie: ',req.cookies)
+        //  console.log('cookie: ',req)
          res.status(200).json({
           success: true,
           message: `Successfully logout !`
-        })
+        }) 
 
        } catch (error) {
         return res.status(400).send({msg: error.message})
@@ -136,4 +149,34 @@ const logOut = async(req,res,next) => {
 
 }
  
-export { signUp, signIn, getUserDetails,logOut };
+ 
+const forgetPassword = async (req,res,next) => {
+    const {email} = req.body ;
+    // console.log(email)
+
+    try {
+    const user_Info = await userModel.findOne({email}).select('+username password');
+
+    if(!user_Info){
+      return res.status(400).json({msg: "user not found"});
+    }
+
+    const token = JWT.sign({email:  email},process.env.SECRET,{expiresIn:'1h'});
+    // console.log(token)
+// console.log("smtp PASSWORD IS : ",process.env.SMTP_PASSWORD)
+    // await sendEmail(email, 'Password Reset', `Click the following link to reset your password: ${'http://localhost:3000/forget-password'}`);
+
+    
+    return res.status(200).json({ message: 'Password reset email sent' });
+
+  } catch (error) {
+    console.error('Error sending password reset email:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+
+
+// console.log(getUserDetails.email)
+    
+}
+export { signUp, signIn, getUserDetails,logOut,forgetPassword };
+   

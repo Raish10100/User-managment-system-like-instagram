@@ -1,6 +1,7 @@
 import mongoose,{ Schema } from "mongoose";
 import JWT from "jsonwebtoken"
 import bcrypt from 'bcrypt'
+// import { forgetPassword } from "../controller/authController";
 
 const userSchema = new Schema({
     name: {
@@ -51,7 +52,7 @@ userSchema.methods = {
             process.env.SECRET,
             {expiresIn: '24h'}
         )
-    }
+    } 
 }
 
  const userModel = mongoose.model('user',userSchema);
