@@ -6,7 +6,8 @@
   text-decoration: none;
 }
 body {
-  background-color: #052e5f;
+  background-color: #fafafa;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -14,7 +15,8 @@ body {
   flex-wrap: wrap;
 }
 .container {
-  background-color: #2a6cae;
+  background-color: #fff;
+
   width: 400px;
   padding: 40px 30px;
   font-size: 20px;  
@@ -39,19 +41,46 @@ input {
   outline: none;
   border: none;
   width: 100%;
+  border: 1px solid #ddd;
+
   border-radius: 5px;
   margin-top: 2px;
 }
-
-button {
+ .logoutBtn{
   margin-top: 5px;
+  display: inline;
+  position: fixed;
+  top: 15px;
+  right: 30px;
+  width: 10%;
+  padding: 5px;
+  border: none;
+  text-align: center;
+  font-size: 25px;
+  font-weight: bold;
+  color: white;
+  border-radius: 5px;
+  background-color: #ff4726;
+ }
+ .btn {
+  margin-top: 5px;
+  display: block;
   width: 100%;
   padding: 5px;
   border: none;
+  text-align: center;
   font-size: 25px;
+  cursor: pointer;
   font-weight: bold;
   border-radius: 5px;
-  background-color: #2693ff;
+  /* background-color: #2693ff; */
+  color: #fff;
+  background-color: #3897f0;
+      
+}
+.btn:hover{
+  background-color: #357ae8;
+
 }
 .form-group {
   margin-bottom: 20px;
@@ -60,7 +89,12 @@ button {
   margin-bottom: 20px;
   width: 200px;
   height: 200px;
-  border-radius: 50%;      object-fit: cover;
+  border-radius: 50%;  
+      object-fit: cover;
+
+}
+.follower-count{
+  color: #888;
 
 }
 .profile-image-container {
@@ -79,7 +113,16 @@ button {
 }
 .links a {
   margin-left: 15px;
+  color: #999;
+
 }
 .link-login {
   margin-top: 40px;
+}
+#instaPage{
+color: #ff4726;
+  position: fixed;
+  top:15px;
+  left: 30px;
+  display: inline;
 }

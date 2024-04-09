@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head> 
     <title>User Page</title>
     <link rel="stylesheet" href="style.css">
 
      
   </head>
   <body>
+    <h1 id="instaPage">Instagram </h1>
+    <a href="" id="logout" class="logoutBtn">Logout</a>
     <div class="container">
       <div class="profile-image-container">
 
@@ -18,12 +20,71 @@
       </div>
       <div class="profile-details">
 
-        <h1 id="userName" class="username"  style="font-weight: bold">john</h1>
-        <p id="userBio" class="bio">Lorem ipsum dolor sit amet consectetur.</p>
-        <p id="userEmail" class="follower-count">Emial : <span>getting</span></p>
-        <p class="follower-count">followers : <span>1000</span></p>
+        <h1 id="userName" class="username"  id="username" style="font-weight: bold"></h1>
+       <p id="userBio" id="bio" class="bio"></p>
+        <p   class="follower-count">Emial : <span id="userEmail"></span></p>
+        <p class="follower-count" >followers : <span>1000</span></p>
       </div>
     </div>
   </body>
-  <script></script>
+  <script>
+    const userName = document.getElementById("userName")
+    const userEmail = document.getElementById("userEmail")
+    const userBio = document.getElementById("userBio")
+
+
+    const userData = async() => {
+      try {
+        const resp = await fetch("http://localhost:50001/api/auth/user",{
+          method: "GET",
+          credentials: "include"
+        })
+          
+          if(resp.status!==200){window.location.href="http://localhost:5500/Assignment/client/login.html"}
+          const {data} = await resp.json();
+          console.log(data)
+          userName.innerText=data.username
+          userEmail.innerText=data.email
+          userBio.innerText=data.bio
+      } catch (error) {
+        console.log(`error: ${error.message}`)
+        window.location.href="http://localhost:5500/Assignment/client/login.html"
+      }
+      
+      
+
+    }
+    
+    userData()
+
+
+    const logoutBtn = document.getElementById("logout");
+    logoutBtn.addEventListener("click",(event) => {
+      event.preventDefault()
+      // console.log("click")
+      logout()
+    })
+      async  function logout() {
+        try {
+    const resp = await fetch("http://localhost:50001/api/auth/logout", {
+      method: "GET",
+      credentials: "include"
+    });
+
+    // Check if response is ok before parsing JSON
+    if (resp.ok) {
+      const data = await resp.json();
+      // console.log(data); // Logging the received data    //!error handling purpose
+      window.location.href = `http://localhost:5500/Assignment/client/login.html`
+    } else {
+      throw new Error('Network response was not ok.');
+      // console.log("hello2")
+    }
+  } catch (error) {
+    console.error('Error during logout:', error.message);
+  }
+};
+
+
+  </script>
 </html>

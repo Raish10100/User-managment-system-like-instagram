@@ -2,10 +2,14 @@ import express from "express";
 import databaseConnect from "./config/databaseConfig.js";
 import authRoute from "./router/authRoute.js";
 import cookieParser from "cookie-parser";
-
+import cors from 'cors'
 
 
 const app = express();
+app.use(cors({
+    origin:process.env.CLIENT_URL,
+    credentials:true
+}))
 
 databaseConnect()
 app.use(cookieParser())

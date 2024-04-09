@@ -1,51 +1,57 @@
 import emailValidator from "email-validator";
 import userModel from "../model/userSchema.js";
-import bcrypt from 'bcrypt'
-import JWT from 'jsonwebtoken'
-import sendEmail from "../utils/emailSender.js";
+import bcrypt, { hash } from 'bcrypt'
+import JWT from 'jsonwebtoken';
+import crypto from 'crypto'
+// import { userInfo } from "os";
 
 const signUp = async (req, res, next) => {
   const { name, email, password, bio, username } = req.body;
-  // console.log(name,email,password,username,bio);
   if (!name || !password || !email || !bio || !username) {
     return res.status(400).json({
       success: false,
       message: "Every field is required",
     });
   }
-
+  
   const validateEmail = emailValidator.validate(email);
-
+  
   if (!validateEmail) {
     return res.status(400).json({
       success: false,
       message: "Please enter valid email",
     });
   }
-
+  
   try {
     const userInfo_signUp = new userModel(req.body);
-    // console.log(password)
+    // console.log(userInfo_signUp)
+    // console.log(name,email,password,username,bio);
     const result = await userInfo_signUp.save();
-
+// console.log(result)
     return res.status(200).json({
       success: true,
       data: result,
     });
-  } catch (error) {
+  } catch (error) { 
+    // console.log("start") 
 
     if(error.code === 11000){
-      return res.status(400).json({
+      return res.status(400).send({
         success: false,
         message: `This account is already exists`
       });
     }
+    // console.log("end")
+
     return res.status(400).json({
       success: false,
       message: `signup controller error : ${error}`,
     });
+
   }
 };
+
 
 const signIn = async (req, res, next) => {
   const { username, password } = req.body;
@@ -125,6 +131,7 @@ const getUserDetails = async (req, res, next) => {
 
 
 const logOut = async(req,res,next) => {
+  // console.log("hello from logout controller")
        try {
         const cookieOption = {
           expires: new Date(0),//! current expires date 
@@ -134,7 +141,7 @@ const logOut = async(req,res,next) => {
          res.cookie('token',null,cookieOption);
 
         //  req.cookies('token',null,cookieOption);
-         console.log('cookie: ',req.cookie)
+        //  console.log('cookie: ',req.cookie)
         //  console.log('cookie: ',req.cookies)
         //  console.log('cookie: ',req)
          res.status(200).json({
@@ -155,28 +162,81 @@ const forgetPassword = async (req,res,next) => {
     // console.log(email)
 
     try {
-    const user_Info = await userModel.findOne({email}).select('+username password');
+    const user_Info = await userModel.findOne({email})//.select('+ username password');
 
     if(!user_Info){
       return res.status(400).json({msg: "user not found"});
     }
 
-    const token = JWT.sign({email:  email},process.env.SECRET,{expiresIn:'1h'});
-    // console.log(token)
-// console.log("smtp PASSWORD IS : ",process.env.SMTP_PASSWORD)
-    // await sendEmail(email, 'Password Reset', `Click the following link to reset your password: ${'http://localhost:3000/forget-password'}`);
+   const forgetPasswordToken =  user_Info.getForgotPasswordToken()
+   await user_Info.save()
 
-    
-    return res.status(200).json({ message: 'Password reset email sent' });
 
+    return res.status(200).json({success: true,forgetPasswordToken : forgetPasswordToken});
+ 
   } catch (error) {
-    console.error('Error sending password reset email:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error('forget password token error: ', error);
+    res.status(500).json({ message: 'forget password controller error' });
   }
 
-
-// console.log(getUserDetails.email)
-    
 }
-export { signUp, signIn, getUserDetails,logOut,forgetPassword };
+
+const resetPassword = async (req, res, next) => {
+  const { token } = req.params;
+  const { password, confirmPassword } = req.body;
+  // console.log(`token: ${token}`)
+
+  // return error message if password or confirmPassword is missing
+  if (!password || !confirmPassword) {
+    return res.status(400).json({
+      success: false,
+      message: "password and confirmPassword is required"
+    });
+  }
+
+  // return error message if password and confirmPassword  are not same
+  if (password !== confirmPassword) {
+    return res.status(400).json({
+      success: false,
+      message: "password and confirm Password does not match ❌"
+    });
+  }
+
+  const hashToken = crypto.createHash("sha256").update(token).digest("hex");
+
+  // console.log(`hashtoken: ${hashToken}`)
+
+  try {
+    const user = await userModel.findOne({
+      forgotPasswordToken: hashToken,
+      forgotPasswordExpiryDate: {
+        $gt: new Date() // forgotPasswordExpiryDate() less the current date
+      }
+    });
+    // console.log(user)
+
+    // return the message if user not found
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Token or token is expired"
+      });
+    }
+
+    user.password = password;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "successfully reset the password"
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+  
+export { signUp, signIn, getUserDetails,logOut,forgetPassword,resetPassword };
    
