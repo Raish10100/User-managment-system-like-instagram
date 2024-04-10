@@ -40,7 +40,7 @@
           credentials: "include"
         })
           
-          if(resp.status!==200){window.location.href="http://localhost:5500/Assignment/client/login.html"}
+          if(resp.status!==200){window.location.href="http://localhost:5500/client/login.html"}
           const {data} = await resp.json();
           console.log(data)
           userName.innerText=data.username
@@ -48,7 +48,7 @@
           userBio.innerText=data.bio
       } catch (error) {
         console.log(`error: ${error.message}`)
-        window.location.href="http://localhost:5500/Assignment/client/login.html"
+        window.location.href="http://localhost:5500/client/login.html"
       }
       
       
@@ -75,7 +75,7 @@
     if (resp.ok) {
       const data = await resp.json();
       // console.log(data); // Logging the received data    //!error handling purpose
-      window.location.href = `http://localhost:5500/Assignment/client/login.html`
+      window.location.href = `http://localhost:5500/client/login.html`
     } else {
       throw new Error('Network response was not ok.');
       // console.log("hello2")
