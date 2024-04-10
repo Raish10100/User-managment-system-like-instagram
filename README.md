@@ -90,6 +90,12 @@ you can see [UI design images](https://github.com/Raish10100/User-managment-syst
     >if you have not understand documentation then don't worry watch the below video. You will get better idea from there.
 ---
 
-2. **Video format** :
+2. **Installation guide through Video format** :
 
+- link of video : [click here](https://youtu.be/cgjnFlXbHO8)
 
+---
+
+3. **Contact Us**
+
+    - Contact links : [click here](https://linktr.ee/Raish101001)
